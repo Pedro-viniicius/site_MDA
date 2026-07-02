@@ -1,0 +1,30 @@
+# Dependências
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Builds
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# Ambiente — nunca versionar segredos
+.env
+.env.local
+.env.*.local
+
+# Banco de dados local
+*.db
+*.sqlite3
+pgdata/
+
+# Sistema operacional / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log

@@ -1,0 +1,165 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Identidade visual MDA — Soluções em Tecnologia
+ * Paleta extraída dos arquivos oficiais da marca:
+ *   - Azul-marinho profundo (#002040 e variações) — cor principal
+ *   - Branco (#F8F8F8) — logo para fundos escuros
+ *   - Prata metálico (#C8CDD4) — acento premium, usar com parcimônia
+ *   - Azul de ação (#1D6FD1) — derivado para botões/links com contraste AA
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sora);
+
+  /* Tons da marca */
+  --color-navy-950: #001528;
+  --color-navy-900: #001f3d;
+  --color-navy-850: #002040;
+  --color-navy-800: #002b52;
+  --color-navy-700: #0a3a66;
+  --color-navy-100: #dbe7f3;
+  --color-navy-50: #eef4fa;
+  --color-acao: #1d6fd1;
+  --color-acao-escura: #175cae;
+  --color-acao-clara: #7ab2f0;
+  --color-prata: #c8cdd4;
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #0c1a29;
+  --card: #ffffff;
+  --card-foreground: #0c1a29;
+  --popover: #ffffff;
+  --popover-foreground: #0c1a29;
+  --primary: #002b52;
+  --primary-foreground: #f8fafc;
+  --secondary: #eef4fa;
+  --secondary-foreground: #002b52;
+  --muted: #f1f5f9;
+  --muted-foreground: #51607a;
+  --accent: #eef4fa;
+  --accent-foreground: #002b52;
+  --destructive: #c93b3b;
+  --border: #dde4ec;
+  --input: #dde4ec;
+  --ring: #1d6fd1;
+  --chart-1: #1d6fd1;
+  --chart-2: #0a3a66;
+  --chart-3: #7ab2f0;
+  --chart-4: #c8cdd4;
+  --chart-5: #002b52;
+  --radius: 0.625rem;
+  --sidebar: #001f3d;
+  --sidebar-foreground: #dbe7f3;
+  --sidebar-primary: #1d6fd1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #002b52;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #0a3a66;
+  --sidebar-ring: #7ab2f0;
+}
+
+.dark {
+  --background: #001528;
+  --foreground: #e8eef5;
+  --card: #001f3d;
+  --card-foreground: #e8eef5;
+  --popover: #001f3d;
+  --popover-foreground: #e8eef5;
+  --primary: #7ab2f0;
+  --primary-foreground: #001528;
+  --secondary: #002b52;
+  --secondary-foreground: #e8eef5;
+  --muted: #002b52;
+  --muted-foreground: #9db3cc;
+  --accent: #002b52;
+  --accent-foreground: #e8eef5;
+  --destructive: #e06b6b;
+  --border: #ffffff1a;
+  --input: #ffffff26;
+  --ring: #7ab2f0;
+  --chart-1: #7ab2f0;
+  --chart-2: #1d6fd1;
+  --chart-3: #c8cdd4;
+  --chart-4: #0a3a66;
+  --chart-5: #eef4fa;
+  --sidebar: #001f3d;
+  --sidebar-foreground: #dbe7f3;
+  --sidebar-primary: #1d6fd1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #002b52;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #0a3a66;
+  --sidebar-ring: #7ab2f0;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer utilities {
+  /* Fundo navy da marca com leve gradiente para hero e footer */
+  .fundo-marca {
+    background: linear-gradient(160deg, #002b52 0%, #001f3d 55%, #001528 100%);
+  }
+}
