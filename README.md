@@ -131,6 +131,25 @@ Documentação completa e interativa em `http://localhost:8001/docs`.
 | POST | `/leads` | Registra pedido de orçamento/contato |
 | GET | `/leads` | Lista leads (painel interno) |
 
+## Deploy (frontend no Vercel + backend no Render)
+
+**Frontend (Vercel):** importe o repositório e, em *Settings → Build and
+Deployment*, defina **Root Directory = `apps/web`**. Depois, em *Environment
+Variables*, aponte para a API pública:
+
+- `NEXT_PUBLIC_API_URL` = URL da API no Render (ex.: `https://mda-api.onrender.com`)
+- `API_URL_INTERNA` = a mesma URL
+
+**Backend (Render):** no painel do Render, use *New → Blueprint* apontando para
+este repositório — o arquivo [`render.yaml`](./render.yaml) cria a API e o
+PostgreSQL automaticamente. Quando pedido, preencha `CORS_ORIGINS` com o
+domínio do Vercel (ex.: `https://seu-projeto.vercel.app,http://localhost:3000`).
+No primeiro start, a API aplica as migrações e o seed sozinha.
+
+> Plano gratuito do Render: o serviço hiberna após inatividade (a primeira
+> visita demora ~1 min) e o banco expira em ~30 dias — para produção de
+> verdade, use um Postgres permanente (ex.: Neon) trocando o `DATABASE_URL`.
+
 ## O que ainda é simulado (mock)
 
 - **IA:** o provedor padrão gera textos determinísticos em português (templates).

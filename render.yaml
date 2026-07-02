@@ -1,0 +1,38 @@
+# Blueprint do Render — cria a API (FastAPI/Docker) + banco PostgreSQL.
+#
+# Como usar (uma vez):
+#   1. Acesse https://dashboard.render.com → New → Blueprint
+#   2. Conecte o repositório site_MDA — o Render lê este arquivo
+#   3. Informe o valor de CORS_ORIGINS quando pedido
+#      (ex.: https://SEU-PROJETO.vercel.app,http://localhost:3000)
+#   4. Clique em Apply. No primeiro start, a API aplica migrações e seed.
+#
+# Atenção: no plano gratuito o serviço "dorme" após inatividade (primeira
+# visita demora ~1 min) e o banco expira após ~30 dias — para algo duradouro,
+# migre o DATABASE_URL para um Postgres gratuito permanente (ex.: Neon).
+
+databases:
+  - name: mda-db
+    plan: free
+    databaseName: mda
+    user: mda
+
+services:
+  - type: web
+    name: mda-api
+    runtime: docker
+    rootDir: apps/api
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mda-db
+          property: connectionString
+      - key: AMBIENTE
+        value: producao
+      - key: AI_PROVIDER
+        value: mock
+      - key: CORS_ORIGINS
+        sync: false # o Render pergunta o valor na criação do Blueprint
