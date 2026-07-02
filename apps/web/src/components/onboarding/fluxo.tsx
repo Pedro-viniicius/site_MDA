@@ -2,15 +2,23 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Loader2, RefreshCw, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  Loader2,
+  RefreshCw,
+  Sparkles,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { OpcaoCard } from "@/components/onboarding/opcao-card";
+import { iconeDaOpcao } from "@/lib/icones";
 import {
   gerarRecomendacao,
   iniciarOnboarding,
@@ -20,9 +28,12 @@ import {
 
 type Fase = "carregando" | "erro" | "perguntando" | "gerando";
 
+/** Perguntas com poucas opções ganham cards grandes em linha. */
+const PERGUNTAS_DESTAQUE = new Set(["intensidade", "tipo_equipamento", "automatico"]);
+
 /**
- * Fluxo guiado de recomendação: uma pergunta por vez, com progresso,
- * possibilidade de voltar e linguagem acolhedora do início ao fim.
+ * Fluxo guiado de recomendação: uma pergunta por vez, com cards visuais,
+ * progresso claro e possibilidade de voltar — um assistente, não um formulário.
  */
 export function FluxoOnboarding() {
   const roteador = useRouter();
@@ -53,21 +64,21 @@ export function FluxoOnboarding() {
     void iniciar();
   }, [iniciar]);
 
-  // Ao trocar de pergunta, leva o foco para o título (leitores de tela e teclado).
+  // Ao trocar de pergunta, o foco vai para o título (leitores de tela e teclado).
   useEffect(() => {
     if (fase === "perguntando") tituloRef.current?.focus();
   }, [indice, fase]);
 
   if (fase === "carregando") {
     return (
-      <Card className="mx-auto w-full max-w-2xl shadow-sm">
+      <Card className="mx-auto w-full max-w-3xl shadow-sm">
         <CardContent className="space-y-4 py-10">
           <Skeleton className="h-3 w-40" />
           <Skeleton className="h-8 w-3/4" />
           <Skeleton className="h-5 w-full" />
-          <div className="space-y-3 pt-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-14 w-full" />
+          <div className="grid gap-3 pt-4 sm:grid-cols-2">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
             ))}
           </div>
         </CardContent>
@@ -77,7 +88,7 @@ export function FluxoOnboarding() {
 
   if (fase === "erro") {
     return (
-      <Card className="mx-auto w-full max-w-2xl border-dashed shadow-sm">
+      <Card className="mx-auto w-full max-w-3xl border-dashed shadow-sm">
         <CardContent className="py-14 text-center">
           <p className="font-heading text-xl text-navy-900">Não conseguimos começar agora.</p>
           <p className="mt-2 text-muted-foreground">
@@ -93,15 +104,28 @@ export function FluxoOnboarding() {
 
   if (fase === "gerando") {
     return (
-      <Card className="mx-auto w-full max-w-2xl shadow-sm">
+      <Card className="mx-auto w-full max-w-3xl shadow-sm">
         <CardContent className="py-16 text-center">
-          <Sparkles aria-hidden className="mx-auto size-10 animate-pulse text-acao" />
-          <p className="mt-6 font-heading text-xl text-navy-900" role="status">
+          <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-navy-50">
+            <Sparkles aria-hidden className="size-8 animate-pulse text-acao" />
+          </span>
+          <p className="mt-6 font-heading text-2xl font-bold text-navy-900" role="status">
             Montando a sua recomendação...
           </p>
-          <p className="mt-2 text-muted-foreground">
-            Estamos cruzando suas respostas com as configurações testadas pela nossa equipe.
-          </p>
+          <ul className="mx-auto mt-6 max-w-xs space-y-3 text-left text-sm text-muted-foreground">
+            <li className="flex items-center gap-2">
+              <CheckCircle2 aria-hidden className="size-4 text-green-600" />
+              Analisando o que você precisa
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle2 aria-hidden className="size-4 text-green-600" />
+              Comparando configurações testadas
+            </li>
+            <li className="flex items-center gap-2">
+              <Loader2 aria-hidden className="size-4 animate-spin text-acao" />
+              Verificando compatibilidade e orçamento
+            </li>
+          </ul>
         </CardContent>
       </Card>
     );
@@ -111,6 +135,11 @@ export function FluxoOnboarding() {
   const total = perguntas.length;
   const valorAtual = respostas[pergunta.chave];
   const ultima = indice === total - 1;
+  const destaque = PERGUNTAS_DESTAQUE.has(pergunta.chave);
+  const outroSoftwareMarcado =
+    pergunta.chave === "softwares" &&
+    Array.isArray(valorAtual) &&
+    (valorAtual as string[]).includes("outro_software");
 
   function respostaVazia(): boolean {
     if (valorAtual == null) return true;
@@ -132,6 +161,13 @@ export function FluxoOnboarding() {
     try {
       if (!respostaVazia()) {
         await responderPergunta(sessionId!, pergunta.chave, valorAtual ?? null);
+      }
+      // "Outro software" tem um campo livre auxiliar gravado na chave `programas`.
+      if (pergunta.chave === "softwares") {
+        const texto = (respostas["programas"] as string) ?? "";
+        if (texto.trim()) {
+          await responderPergunta(sessionId!, "programas", texto.trim());
+        }
       }
       if (ultima) {
         setFase("gerando");
@@ -155,90 +191,108 @@ export function FluxoOnboarding() {
     if (indice > 0) setIndice(indice - 1);
   }
 
-  function definirResposta(valor: unknown) {
+  function definirResposta(valor: unknown, chave: string = pergunta.chave) {
     setErroValidacao(null);
-    setRespostas((atual) => ({ ...atual, [pergunta.chave]: valor }));
+    setRespostas((atual) => ({ ...atual, [chave]: valor }));
   }
 
-  function alternarMultipla(valor: string, marcado: boolean) {
+  function alternarMultipla(valor: string) {
     const lista = Array.isArray(valorAtual) ? [...(valorAtual as string[])] : [];
-    definirResposta(marcado ? [...lista, valor] : lista.filter((v) => v !== valor));
+    definirResposta(
+      lista.includes(valor) ? lista.filter((v) => v !== valor) : [...lista, valor]
+    );
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
+    <div className="mx-auto w-full max-w-3xl">
+      {/* Progresso */}
       <div className="mb-6">
-        <p className="mb-2 text-sm font-medium text-navy-800">
-          Pergunta {indice + 1} de {total}
-        </p>
+        <div className="mb-2 flex items-center justify-between text-sm">
+          <p className="font-medium text-navy-800">
+            Pergunta {indice + 1} de {total}
+          </p>
+          <p className="tabular-nums text-muted-foreground">
+            {Math.round(((indice + 1) / total) * 100)}%
+          </p>
+        </div>
         <Progress
           value={((indice + 1) / total) * 100}
           aria-label={`Progresso: pergunta ${indice + 1} de ${total}`}
+          className="[&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-indicator]]:bg-acao [&_[data-slot=progress-indicator]]:rounded-full"
         />
       </div>
 
-      <Card className="shadow-sm">
-        <CardContent className="py-8">
+      <Card className="shadow-md">
+        <CardContent className="py-8 sm:px-8">
+          {ultima && (
+            <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-navy-50 px-3 py-1 text-sm font-medium text-navy-800">
+              <Sparkles aria-hidden className="size-3.5 text-acao" /> Falta só essa!
+            </p>
+          )}
           <h2
             ref={tituloRef}
             tabIndex={-1}
-            className="font-heading text-2xl font-bold text-navy-900 outline-none"
+            className="font-heading text-2xl font-bold text-navy-900 outline-none sm:text-3xl"
           >
             {pergunta.titulo}
           </h2>
           {pergunta.apoio && <p className="mt-2 text-muted-foreground">{pergunta.apoio}</p>}
           {!pergunta.obrigatoria && (
-            <p className="mt-1 text-sm text-muted-foreground">(Opcional — pode pular se preferir.)</p>
+            <p className="mt-1 text-sm font-medium text-acao">Opcional — pode pular.</p>
           )}
 
+          {/* Opções em cards visuais */}
           <div className="mt-6">
-            {pergunta.tipo === "escolha_unica" && (
-              <RadioGroup
-                value={(valorAtual as string) ?? null}
-                onValueChange={(valor) => definirResposta(valor)}
-                className="gap-3"
+            {pergunta.tipo !== "texto" && (
+              <div
+                role={pergunta.tipo === "escolha_unica" ? "radiogroup" : "group"}
+                aria-label={pergunta.titulo}
+                className={
+                  destaque
+                    ? "grid gap-3 sm:grid-cols-3"
+                    : "grid gap-3 sm:grid-cols-2"
+                }
               >
-                {pergunta.opcoes.map((opcao) => (
-                  <label
-                    key={opcao.valor}
-                    className="flex cursor-pointer items-start gap-3 rounded-xl border bg-card p-4 transition-colors hover:border-acao/60 has-data-checked:border-acao has-data-checked:bg-navy-50"
-                  >
-                    <RadioGroupItem value={opcao.valor} className="mt-0.5" />
-                    <span>
-                      <span className="block font-medium">{opcao.rotulo}</span>
-                      {opcao.descricao && (
-                        <span className="block text-sm text-muted-foreground">{opcao.descricao}</span>
-                      )}
-                    </span>
-                  </label>
-                ))}
-              </RadioGroup>
-            )}
-
-            {pergunta.tipo === "escolha_multipla" && (
-              <div className="grid gap-3" role="group" aria-label={pergunta.titulo}>
                 {pergunta.opcoes.map((opcao) => {
-                  const marcado =
-                    Array.isArray(valorAtual) && (valorAtual as string[]).includes(opcao.valor);
+                  const selecionado =
+                    pergunta.tipo === "escolha_unica"
+                      ? valorAtual === opcao.valor
+                      : Array.isArray(valorAtual) &&
+                        (valorAtual as string[]).includes(opcao.valor);
                   return (
-                    <label
+                    <OpcaoCard
                       key={opcao.valor}
-                      className="flex cursor-pointer items-start gap-3 rounded-xl border bg-card p-4 transition-colors hover:border-acao/60 has-data-checked:border-acao has-data-checked:bg-navy-50"
-                    >
-                      <Checkbox
-                        checked={marcado}
-                        onCheckedChange={(estado) => alternarMultipla(opcao.valor, estado === true)}
-                        className="mt-0.5"
-                      />
-                      <span>
-                        <span className="block font-medium">{opcao.rotulo}</span>
-                        {opcao.descricao && (
-                          <span className="block text-sm text-muted-foreground">{opcao.descricao}</span>
-                        )}
-                      </span>
-                    </label>
+                      icone={iconeDaOpcao(pergunta.chave, opcao.valor)}
+                      rotulo={opcao.rotulo}
+                      descricao={opcao.descricao}
+                      selecionado={selecionado}
+                      modo={pergunta.tipo === "escolha_unica" ? "radio" : "checkbox"}
+                      destaque={destaque}
+                      onSelecionar={() =>
+                        pergunta.tipo === "escolha_unica"
+                          ? definirResposta(opcao.valor)
+                          : alternarMultipla(opcao.valor)
+                      }
+                    />
                   );
                 })}
+              </div>
+            )}
+
+            {/* Campo livre revelado por "Outro software" */}
+            {outroSoftwareMarcado && (
+              <div className="mt-4 rounded-xl border border-acao/30 bg-navy-50/60 p-4">
+                <Label htmlFor="outro-software" className="text-sm font-medium text-navy-900">
+                  Se quiser, escreva aqui qual software você usa
+                </Label>
+                <Textarea
+                  id="outro-software"
+                  value={(respostas["programas"] as string) ?? ""}
+                  onChange={(evento) => definirResposta(evento.target.value, "programas")}
+                  rows={2}
+                  placeholder="Ex.: Corel Draw, Rhino, um sistema da minha empresa..."
+                  className="mt-2 bg-background"
+                />
               </div>
             )}
 
@@ -259,6 +313,7 @@ export function FluxoOnboarding() {
             </p>
           )}
 
+          {/* Navegação */}
           <div className="mt-8 flex items-center justify-between gap-3">
             <Button
               type="button"
@@ -272,7 +327,12 @@ export function FluxoOnboarding() {
               type="button"
               onClick={() => void avancar()}
               disabled={enviando}
-              className="bg-acao px-6 text-white hover:bg-acao-escura"
+              size="lg"
+              className={
+                ultima
+                  ? "h-12 bg-acao px-7 text-base text-white shadow-lg shadow-acao/25 hover:bg-acao-escura"
+                  : "bg-acao px-6 text-white hover:bg-acao-escura"
+              }
             >
               {enviando ? (
                 <>
@@ -294,7 +354,7 @@ export function FluxoOnboarding() {
       </Card>
 
       <p className="mt-4 text-center text-sm text-muted-foreground">
-        Suas respostas ficam guardadas só para montar a recomendação — nada de spam.
+        Suas respostas servem só para montar a recomendação — nada de spam.
       </p>
     </div>
   );

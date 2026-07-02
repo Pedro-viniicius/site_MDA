@@ -54,35 +54,26 @@ class ProvedorMock:
         )
 
     # ------------------------------------------------------------------
-    # Resumo para o cliente: simples, acolhedor e transparente.
+    # Resumo para o cliente: curto, acolhedor e fácil de ler.
+    # Os detalhes (pontos fortes, limitações) aparecem em blocos visuais
+    # na página — aqui vai só a mensagem essencial.
     # ------------------------------------------------------------------
     def _resumo_cliente(self, dados: DadosRecomendacao) -> str:
         usos = [ROTULO_USO.get(u, u) for u in (dados.respostas.get("usos") or [])]
-        frase_usos = _listar_em_portugues(usos) or "as atividades que você descreveu"
+        frase_usos = _listar_em_portugues(usos[:3]) or "as atividades que você descreveu"
+        if dados.respostas.get("softwares"):
+            frase_usos += " — incluindo os programas que você marcou"
         tipo = "notebook" if dados.build_tipo == "notebook" else "computador"
 
         partes = [
-            f"Encontramos uma ótima opção para você: o {dados.build_nome}. "
-            f"Esse {tipo} atende bem às demandas que você levantou, como {frase_usos}."
+            f"O {dados.build_nome} é o {tipo} certo para {frase_usos}."
         ]
-
         prioridade = ROTULO_PRIORIDADE.get(dados.respostas.get("prioridade") or "")
         if prioridade:
-            partes.append(f"Na escolha da configuração, {prioridade}.")
-
-        if dados.pontos_fortes:
-            partes.append(
-                "Entre os destaques estão: " + _listar_em_portugues(dados.pontos_fortes) + "."
-            )
-
-        if dados.limitacoes:
-            partes.append(
-                "Para ser transparente: " + _listar_em_portugues(dados.limitacoes) + "."
-            )
-
+            partes.append(f"Na configuração, {prioridade}.")
         partes.append(
-            "E fique tranquilo — antes de qualquer montagem, um especialista da MDA "
-            "revisa a configuração com você, sem compromisso."
+            "Antes de qualquer montagem, um especialista da MDA revisa tudo com você — "
+            "sem compromisso."
         )
         return " ".join(partes)
 
@@ -112,6 +103,7 @@ class ProvedorMock:
                 "prioridade": dados.respostas.get("prioridade"),
                 "ja_possui": dados.respostas.get("perifericos") or [],
                 "conectividade": dados.respostas.get("conectividade") or [],
+                "softwares_marcados": dados.respostas.get("softwares") or [],
                 "programas_citados": dados.respostas.get("programas") or "não informado",
             },
             "proxima_acao": "Entrar em contato com o cliente para validar a configuração e enviar orçamento.",
@@ -124,7 +116,7 @@ class ProvedorMock:
         perguntas: list[str] = []
         respostas = dados.respostas
 
-        if not respostas.get("programas"):
+        if not respostas.get("softwares") and not respostas.get("programas"):
             perguntas.append(
                 "Quais programas específicos o cliente usa? (não informado no onboarding)"
             )

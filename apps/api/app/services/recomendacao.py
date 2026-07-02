@@ -43,6 +43,36 @@ DEMANDA_POR_USO: dict[str, dict[str, int]] = {
 # Ajuste por intensidade declarada: uso intenso sobe a régua, leve desce.
 AJUSTE_INTENSIDADE = {"leve": -1, "medio": 0, "pesado": 1}
 
+# Softwares conhecidos → uso implícito (deixa a demanda mais precisa mesmo
+# quando o cliente não marcou o uso correspondente).
+SOFTWARE_PARA_USO: dict[str, str] = {
+    "office_excel": "trabalho_escritorio",
+    "power_bi": "planilhas_dados",
+    "canva": "design_grafico",
+    "photoshop": "design_grafico",
+    "illustrator": "design_grafico",
+    "premiere": "edicao_video",
+    "davinci": "edicao_video",
+    "autocad": "modelagem_3d_cad",
+    "revit": "modelagem_3d_cad",
+    "sketchup": "modelagem_3d_cad",
+    "blender": "modelagem_3d_cad",
+    "vscode": "programacao",
+    "intellij": "programacao",
+    "obs": "streaming",
+    "jogos_steam": "jogos",
+}
+
+
+def usos_efetivos(respostas: dict[str, Any]) -> list[str]:
+    """Usos declarados + usos implícitos pelos softwares marcados."""
+    usos = list(respostas.get("usos") or [])
+    for software in respostas.get("softwares") or []:
+        uso = SOFTWARE_PARA_USO.get(software)
+        if uso and uso not in usos:
+            usos.append(uso)
+    return usos or ["uso_diario"]
+
 # Faixas de orçamento (em R$). None = sem limite naquele lado.
 FAIXAS_ORCAMENTO: dict[str, tuple[int | None, int | None]] = {
     "ate_2500": (None, 2500),
@@ -77,8 +107,8 @@ def _respostas_da_sessao(sessao: OnboardingSession) -> dict[str, Any]:
 
 
 def calcular_demanda(respostas: dict[str, Any]) -> dict[str, int]:
-    """Combina os usos marcados e a intensidade em uma demanda única (máximos)."""
-    usos: list[str] = respostas.get("usos") or ["uso_diario"]
+    """Combina usos (declarados + implícitos por software) e intensidade em uma demanda única."""
+    usos = usos_efetivos(respostas)
     demanda = {"cpu_tier": 1, "gpu_tier": 0, "ram_gb": 8, "ssd_gb": 256}
     for uso in usos:
         exigencia = DEMANDA_POR_USO.get(uso)
@@ -99,7 +129,7 @@ def calcular_demanda(respostas: dict[str, Any]) -> dict[str, int]:
 
 def detectar_perfil(respostas: dict[str, Any], demanda: dict[str, int]) -> str:
     """Traduz usos + demanda em um perfil de máquina (do mais ao menos exigente)."""
-    usos = set(respostas.get("usos") or [])
+    usos = set(usos_efetivos(respostas))
     intensidade = respostas.get("intensidade") or "medio"
 
     if "ia_dados" in usos or demanda["cpu_tier"] >= 5:

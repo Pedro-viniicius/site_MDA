@@ -12,7 +12,7 @@ from app.routers.builds import montar_build_out
 from app.schemas.onboarding import IniciarOnboardingOut, ResponderIn, ResponderOut
 from app.schemas.recomendacao import GerarRecomendacaoIn, RecomendacaoOut
 from app.services import recomendacao as motor
-from app.services.perguntas import obter_perguntas
+from app.services.perguntas import chaves_validas, obter_perguntas
 
 router = APIRouter(prefix="/recommendations", tags=["Recomendações"])
 
@@ -32,8 +32,7 @@ def responder(dados: ResponderIn, db: Session = Depends(obter_sessao)) -> Respon
     if not sessao:
         raise HTTPException(status_code=404, detail="Sessão não encontrada. Comece novamente.")
 
-    chaves_validas = {p.chave for p in obter_perguntas()}
-    if dados.chave not in chaves_validas:
+    if dados.chave not in chaves_validas():
         raise HTTPException(status_code=422, detail=f"Pergunta desconhecida: {dados.chave}")
 
     # Regravar a resposta permite que o cliente volte etapas sem duplicar dados.
