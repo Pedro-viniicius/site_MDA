@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Slides | Parceria MDA</title>
+  <style>
+    :root {
+      --navy-950: #001528;
+      --navy-900: #001f3d;
+      --navy-850: #002040;
+      --navy-800: #002b52;
+      --navy-700: #0a3a66;
+      --navy-100: #dbe7f3;
+      --navy-50: #eef4fa;
+      --acao: #1d6fd1;
+      --acao-escura: #175cae;
+      --acao-clara: #7ab2f0;
+      --prata: #c8cdd4;
+      --texto: #0c1a29;
+      --muted: #51607a;
+      --borda: #dde4ec;
+      --ok: #137a42;
+      --alerta: #a16207;
+      --risco: #b42318;
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+      background:
+        radial-gradient(46rem 22rem at 90% -10%, rgba(29, 111, 209, 0.16), transparent 62%),
+        linear-gradient(160deg, #f8fafc 0%, #eef4fa 100%);
+      color: var(--texto);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: Sora, Inter, ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0;
+      line-height: 1.08;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 22px;
+      padding: clamp(22px, 4.2vw, 58px);
+      opacity: 0;
+      transform: translateX(28px) scale(0.985);
+      pointer-events: none;
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .slide.dark {
+      color: white;
+      background:
+        radial-gradient(54rem 28rem at 88% -12%, rgba(29, 111, 209, 0.34), transparent 60%),
+        radial-gradient(38rem 22rem at -10% 112%, rgba(122, 178, 240, 0.16), transparent 62%),
+        linear-gradient(160deg, var(--navy-800) 0%, var(--navy-900) 56%, var(--navy-950) 100%);
+    }
+
+    .slide.dark::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(122, 178, 240, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(122, 178, 240, 0.07) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(68rem 36rem at 50% 0%, black 30%, transparent 78%);
+      pointer-events: none;
+    }
+
+    .slide > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 46px;
+    }
+
+    .logo {
+      display: block;
+      width: 118px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(29, 111, 209, 0.18);
+      border-radius: 999px;
+      padding: 6px 11px;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--acao-escura);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .dark .kicker {
+      border-color: rgba(122, 178, 240, 0.38);
+      background: rgba(0, 31, 61, 0.54);
+      color: var(--acao-clara);
+    }
+
+    .content {
+      display: grid;
+      align-content: center;
+      gap: clamp(20px, 4vw, 42px);
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .content.two {
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      align-items: center;
+    }
+
+    .content.center {
+      text-align: center;
+      justify-items: center;
+    }
+
+    .content h1 {
+      max-width: 980px;
+      color: var(--navy-900);
+      font-size: clamp(2.4rem, 6.2vw, 6.2rem);
+      font-weight: 850;
+    }
+
+    .content h2 {
+      max-width: 930px;
+      color: var(--navy-900);
+      font-size: clamp(2.1rem, 5vw, 4.8rem);
+      font-weight: 820;
+    }
+
+    .dark .content h1,
+    .dark .content h2 {
+      color: white;
+    }
+
+    .accent {
+      color: var(--acao);
+    }
+
+    .dark .accent {
+      color: var(--acao-clara);
+    }
+
+    .subtitle {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.45rem);
+    }
+
+    .dark .subtitle {
+      color: var(--navy-100);
+    }
+
+    .pill-row,
+    .metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      border: 1px solid var(--borda);
+      border-radius: 999px;
+      padding: 9px 13px;
+      background: white;
+      color: var(--navy-800);
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .dark .pill {
+      border-color: rgba(122, 178, 240, 0.28);
+      background: rgba(0, 31, 61, 0.55);
+      color: var(--navy-100);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .cards.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      min-height: 150px;
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 46px rgba(0, 31, 61, 0.08);
+    }
+
+    .card h3 {
+      color: var(--navy-900);
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .dark .card {
+      border-color: rgba(122, 178, 240, 0.25);
+      background: rgba(0, 31, 61, 0.58);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+    }
+
+    .dark .card h3 {
+      color: white;
+    }
+
+    .dark .card p,
+    .dark .card li {
+      color: var(--navy-100);
+    }
+
+    ul.clean {
+      display: grid;
+      gap: 13px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    ul.clean li {
+      position: relative;
+      padding-left: 22px;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+    }
+
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.62em;
+      width: 9px;
+      height: 9px;
+      border-radius: 99px;
+      background: var(--acao);
+    }
+
+    .dark ul.clean li::before {
+      background: var(--acao-clara);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .flow-step {
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      padding: 15px;
+      background: white;
+    }
+
+    .flow-step span {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      background: var(--navy-800);
+      color: white;
+      font-weight: 900;
+    }
+
+    .flow-step strong {
+      display: block;
+      color: var(--navy-900);
+      line-height: 1.2;
+    }
+
+    .flow-step small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 18px 46px rgba(0, 31, 61, 0.08);
+    }
+
+    .panel header {
+      padding: 15px 18px;
+      background: var(--navy-50);
+      color: var(--navy-900);
+      font-weight: 900;
+    }
+
+    .panel ul {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 18px 22px 20px 38px;
+      color: var(--muted);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status.ok {
+      background: #dcfce7;
+      color: var(--ok);
+    }
+
+    .status.next {
+      background: #fffbeb;
+      color: var(--alerta);
+    }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .roadmap .card {
+      min-height: 178px;
+    }
+
+    .notes {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      margin-bottom: 42px;
+      border: 1px solid rgba(29, 111, 209, 0.18);
+      border-radius: 14px;
+      padding: 13px 16px;
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .dark .notes {
+      border-color: rgba(122, 178, 240, 0.24);
+      background: rgba(0, 21, 40, 0.52);
+      color: var(--navy-100);
+    }
+
+    .notes strong {
+      color: var(--navy-900);
+    }
+
+    .dark .notes strong {
+      color: white;
+    }
+
+    .controls {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateX(-50%);
+      border: 1px solid rgba(0, 31, 61, 0.10);
+      border-radius: 999px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 18px 46px rgba(0, 31, 61, 0.14);
+      backdrop-filter: blur(12px);
+    }
+
+    .controls button {
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: var(--navy-800);
+      color: white;
+      cursor: pointer;
+      font-weight: 850;
+      line-height: 1;
+    }
+
+    .controls button:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+    }
+
+    .counter {
+      min-width: 70px;
+      color: var(--navy-800);
+      text-align: center;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .progress {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 25;
+      height: 5px;
+      background: rgba(0, 31, 61, 0.12);
+    }
+
+    .progress span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: var(--acao);
+      transition: width 180ms ease;
+    }
+
+    @media (max-width: 1020px) {
+      body {
+        overflow: auto;
+      }
+
+      .deck {
+        min-height: 100vh;
+        height: auto;
+      }
+
+      .slide {
+        position: relative;
+        display: none;
+        min-height: 100vh;
+      }
+
+      .slide.active {
+        display: grid;
+      }
+
+      .content.two,
+      .split,
+      .cards,
+      .cards.two,
+      .roadmap {
+        grid-template-columns: 1fr;
+      }
+
+      .flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .logo {
+        width: 100px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .slide {
+        padding: 20px 16px 90px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        width: calc(100% - 24px);
+        justify-content: space-between;
+      }
+
+      .notes {
+        font-size: 0.84rem;
+      }
+    }
+
+    @media print {
+      body {
+        overflow: visible;
+        background: white;
+      }
+
+      .deck {
+        height: auto;
+      }
+
+      .slide,
+      .slide.active {
+        position: relative;
+        display: grid;
+        min-height: 100vh;
+        page-break-after: always;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+
+      .controls,
+      .progress {
+        display: none;
+      }
+
+      .card,
+      .panel,
+      .notes {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-live="polite">
+    <section class="slide dark active" data-title="Título">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-branca.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">1 · Apresentação</span>
+      </header>
+      <div class="content center">
+        <h1>MDA: <span class="accent">o computador certo</span> para cada pessoa</h1>
+        <p class="subtitle">Uma plataforma guiada para transformar necessidade real em recomendação clara, orçamento e venda com apoio humano.</p>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Abra com a ideia central. A MDA não vende “peças”; vende segurança para escolher bem.</aside>
+    </section>
+
+    <section class="slide" data-title="A dor">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-azul.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">2 · A dor</span>
+      </header>
+      <div class="content two">
+        <div>
+          <h2>As pessoas usam computador, mas <span class="accent">não sabem escolher</span>.</h2>
+          <p class="subtitle">O problema não é falta de opção. É excesso de linguagem técnica no momento da compra.</p>
+        </div>
+        <div class="cards">
+          <article class="card"><h3>Medo de errar</h3><p>Comprar caro e descobrir que não atende.</p></article>
+          <article class="card"><h3>Jargão técnico</h3><p>CPU, GPU, socket, fonte e compatibilidade confundem.</p></article>
+          <article class="card"><h3>Decisão solitária</h3><p>O cliente precisa decidir sem repertório técnico.</p></article>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Use exemplos simples: estudante, família ou profissional que só quer algo que funcione.</aside>
+    </section>
+
+    <section class="slide dark" data-title="Quem atendemos">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-branca.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">3 · Público</span>
+      </header>
+      <div class="content">
+        <h2>Quem a MDA pode atender</h2>
+        <div class="pill-row">
+          <span class="pill">Estudantes</span>
+          <span class="pill">Famílias</span>
+          <span class="pill">Profissionais</span>
+          <span class="pill">Gamers</span>
+          <span class="pill">Designers</span>
+          <span class="pill">Engenheiros</span>
+          <span class="pill">Arquitetos</span>
+          <span class="pill">Pequenos negócios</span>
+        </div>
+        <p class="subtitle">O ponto comum entre esses perfis é a necessidade de traduzir uso real em configuração correta.</p>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Mostre amplitude sem prometer dominar todos os nichos de início. O MVP pode começar por perfis mais comuns.</aside>
+    </section>
+
+    <section class="slide" data-title="Por que importa">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-azul.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">4 · Impacto</span>
+      </header>
+      <div class="content">
+        <h2>Quando a escolha é ruim, o prejuízo aparece depois.</h2>
+        <div class="cards">
+          <article class="card"><h3>Compra errada</h3><p>Máquina que não roda o necessário ou sobra demais para o uso.</p></article>
+          <article class="card"><h3>Dinheiro desperdiçado</h3><p>O cliente paga por excesso ou precisa trocar cedo.</p></article>
+          <article class="card"><h3>Baixo desempenho</h3><p>Travamentos viram frustração, suporte e perda de confiança.</p></article>
+          <article class="card"><h3>Confusão técnica</h3><p>A decisão fica parecendo um problema que só especialista entende.</p></article>
+          <article class="card"><h3>Venda mais lenta</h3><p>O cliente inseguro compara demais e posterga a compra.</p></article>
+          <article class="card"><h3>Pós-venda pressionado</h3><p>Expectativas mal alinhadas geram reclamação.</p></article>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Enfatize que confiança antes da venda reduz atrito depois da venda.</aside>
+    </section>
+
+    <section class="slide dark" data-title="A solução">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-branca.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">5 · Solução</span>
+      </header>
+      <div class="content two">
+        <div>
+          <h2>Recomendação guiada com <span class="accent">suporte humano</span>.</h2>
+          <p class="subtitle">O cliente fala do uso, não das peças. A plataforma organiza a recomendação e o especialista revisa antes da venda.</p>
+        </div>
+        <ul class="clean">
+          <li>Perguntas simples, sem jargão de hardware.</li>
+          <li>Configurações testadas e compatíveis.</li>
+          <li>Resumo claro para o cliente.</li>
+          <li>Visão técnica para o vendedor e montador.</li>
+          <li>Pedido de orçamento como próximo passo natural.</li>
+        </ul>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> A palavra-chave é “guiada”. A plataforma não substitui o especialista; ela melhora a conversa.</aside>
+    </section>
+
+    <section class="slide" data-title="Como funciona">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-azul.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">6 · Funcionamento</span>
+      </header>
+      <div class="content">
+        <h2>Como a plataforma funciona</h2>
+        <div class="flow">
+          <div class="flow-step"><span>1</span><strong>Onboarding</strong><small>Uso, intensidade, orçamento, softwares e prioridade.</small></div>
+          <div class="flow-step"><span>2</span><strong>Regras</strong><small>Demanda de CPU, GPU, RAM e SSD.</small></div>
+          <div class="flow-step"><span>3</span><strong>Recomendação</strong><small>Build mais adequada dentro do catálogo.</small></div>
+          <div class="flow-step"><span>4</span><strong>Revisão</strong><small>Especialista valida compatibilidade, preço e estoque.</small></div>
+          <div class="flow-step"><span>5</span><strong>Venda</strong><small>Orçamento, montagem, teste, entrega e suporte.</small></div>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Deixe claro que preço e estoque reais entram na revisão humana e na operação.</aside>
+    </section>
+
+    <section class="slide" data-title="O que já existe">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-azul.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">7 · Projeto atual</span>
+      </header>
+      <div class="content">
+        <h2>O que já existe no projeto</h2>
+        <div class="split">
+          <div class="panel">
+            <header>Implementado</header>
+            <ul>
+              <li><span class="status ok">Existe</span> Home, vitrine de PCs prontos e onboarding guiado.</li>
+              <li><span class="status ok">Existe</span> Página de recomendação com orçamento, motivos e configuração.</li>
+              <li><span class="status ok">Existe</span> Motor determinístico com regras de compatibilidade.</li>
+              <li><span class="status ok">Existe</span> Leads reais e painel admin demonstrativo.</li>
+              <li><span class="status ok">Existe</span> Catálogo seed com builds e componentes em português.</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <header>Próxima etapa</header>
+            <ul>
+              <li><span class="status next">Próxima etapa</span> Preços reais, margens, fornecedores e estoque.</li>
+              <li><span class="status next">Próxima etapa</span> WhatsApp real e notificações de lead.</li>
+              <li><span class="status next">Próxima etapa</span> Login, CRUD admin e gestão comercial completa.</li>
+              <li><span class="status next">Próxima etapa</span> Checkout, CRM e integrações futuras.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Este slide deve transmitir honestidade. Não apresente roadmap como se fosse entrega pronta.</aside>
+    </section>
+
+    <section class="slide dark" data-title="Por que é boa">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-branca.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">8 · Valor</span>
+      </header>
+      <div class="content">
+        <h2>Por que a ideia é boa</h2>
+        <div class="cards">
+          <article class="card"><h3>Confiança</h3><p>O cliente entende a razão da escolha.</p></article>
+          <article class="card"><h3>Clareza</h3><p>A conversa começa no uso real, não na ficha técnica.</p></article>
+          <article class="card"><h3>Conversão</h3><p>O lead chega mais qualificado para orçamento.</p></article>
+          <article class="card"><h3>Diferenciação</h3><p>A venda se posiciona como orientação, não só catálogo.</p></article>
+          <article class="card"><h3>Melhoria recorrente</h3><p>Cada atendimento ensina ajustes de perguntas, builds e regras.</p></article>
+          <article class="card"><h3>Execução conjunta</h3><p>Produto digital e operação real se complementam.</p></article>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Evite números de mercado. O argumento é qualitativo: clareza, confiança e execução.</aside>
+    </section>
+
+    <section class="slide" data-title="Por que IA ajuda">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-azul.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">9 · IA</span>
+      </header>
+      <div class="content two">
+        <div>
+          <h2>Por que a IA ajuda</h2>
+          <p class="subtitle">No projeto atual, a IA/mock explica e organiza a comunicação. Ela apoia a venda; não assume a decisão técnica sozinha.</p>
+        </div>
+        <ul class="clean">
+          <li>Transforma recomendação técnica em explicação simples.</li>
+          <li>Personaliza o resumo conforme uso, prioridade e orçamento.</li>
+          <li>Cria apoio para o vendedor conduzir a próxima conversa.</li>
+          <li>Ajuda a manter tom humano e consistente.</li>
+        </ul>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Reforce que o provedor atual é mock por padrão; IA real é próxima etapa prevista.</aside>
+    </section>
+
+    <section class="slide dark" data-title="IA não basta">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-branca.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">10 · Limite da IA</span>
+      </header>
+      <div class="content two">
+        <div>
+          <h2>Por que IA <span class="accent">não basta</span> sozinha</h2>
+          <p class="subtitle">Computador é produto físico: precisa bater preço, disponibilidade, compatibilidade e responsabilidade pós-venda.</p>
+        </div>
+        <div class="cards two">
+          <article class="card"><h3>Revisão técnica</h3><p>Um especialista precisa validar a configuração antes de vender.</p></article>
+          <article class="card"><h3>Compatibilidade</h3><p>Regras objetivas protegem contra erros de montagem.</p></article>
+          <article class="card"><h3>Inventário real</h3><p>Preço e disponibilidade mudam; o orçamento precisa refletir isso.</p></article>
+          <article class="card"><h3>Responsabilidade</h3><p>Entrega, garantia e manutenção não são resolvidas por texto.</p></article>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Este slide prepara a lógica da parceria: sem operação, a plataforma não fecha a promessa.</aside>
+    </section>
+
+    <section class="slide" data-title="Parceria">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-azul.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">11 · Parceria</span>
+      </header>
+      <div class="content">
+        <h2>Lógica da parceria</h2>
+        <div class="split">
+          <div class="panel">
+            <header>Eu construo o produto digital</header>
+            <ul>
+              <li>Visão do produto e posicionamento.</li>
+              <li>UX, site, programação e evolução da plataforma.</li>
+              <li>Fluxo de recomendação e melhoria contínua.</li>
+              <li>Organização dos leads e experiência do cliente.</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <header>Ele opera o negócio físico</header>
+            <ul>
+              <li>Montagem, testes e entrega.</li>
+              <li>Fornecedores, peças, preços e estoque.</li>
+              <li>Venda, negociação e fechamento.</li>
+              <li>Suporte, manutenção, garantia e upgrades.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Use a frase: “A plataforma abre a porta e organiza a decisão; a operação entrega a promessa.”</aside>
+    </section>
+
+    <section class="slide dark" data-title="Responsabilidades">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-branca.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">12 · Divisão</span>
+      </header>
+      <div class="content">
+        <h2>Divisão de responsabilidades</h2>
+        <div class="cards two">
+          <article class="card"><h3>Tecnologia e produto</h3><p>Site, interface, perguntas, recomendação, página de resultado, painel e evolução digital.</p></article>
+          <article class="card"><h3>Montagem e operação</h3><p>Configuração real, compatibilidade final, montagem, testes, garantia, entrega e manutenção.</p></article>
+          <article class="card"><h3>Catálogo e preços</h3><p>A plataforma dá a estrutura; o parceiro traz fornecedores, custo, margem e disponibilidade.</p></article>
+          <article class="card"><h3>Venda e atendimento</h3><p>Lead qualificado entra pela plataforma; fechamento e relacionamento dependem da operação.</p></article>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> A divisão deve parecer justa e mensurável. Não deixe responsabilidades críticas vagas.</aside>
+    </section>
+
+    <section class="slide" data-title="Receita">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-azul.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">13 · Receita</span>
+      </header>
+      <div class="content">
+        <h2>Como podemos ganhar dinheiro</h2>
+        <div class="cards">
+          <article class="card"><h3>PCs sob medida</h3><p>Configuração recomendada a partir do uso do cliente.</p></article>
+          <article class="card"><h3>PCs prontos</h3><p>Máquinas pré-configuradas para usos comuns.</p></article>
+          <article class="card"><h3>Upgrades</h3><p>Memória, SSD, placa de vídeo, fonte e melhorias futuras.</p></article>
+          <article class="card"><h3>Suporte</h3><p>Instalação, configuração, orientação e acompanhamento.</p></article>
+          <article class="card"><h3>Manutenção</h3><p>Limpeza, diagnóstico, troca de peças e revisão preventiva.</p></article>
+          <article class="card"><h3>Clientes empresariais</h3><p>Pequenas empresas que precisam comprar com clareza e suporte.</p></article>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Fale como hipóteses comerciais para validar, não como faturamento garantido.</aside>
+    </section>
+
+    <section class="slide" data-title="MVP roadmap">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-azul.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">14 · MVP</span>
+      </header>
+      <div class="content">
+        <h2>MVP roadmap: o que validar primeiro</h2>
+        <div class="roadmap">
+          <article class="card"><h3>1. Catálogo real</h3><p>Escolher poucas builds com preço, margem e disponibilidade reais.</p></article>
+          <article class="card"><h3>2. Captação</h3><p>Usar a plataforma para gerar pedidos de orçamento reais.</p></article>
+          <article class="card"><h3>3. Atendimento</h3><p>Medir dúvidas, tempo de resposta, objeções e fechamento.</p></article>
+          <article class="card"><h3>4. Ajuste</h3><p>Melhorar perguntas, builds, regras e texto com feedback.</p></article>
+        </div>
+        <p class="subtitle"><span class="status next">Próxima etapa</span> WhatsApp real, notificações, autenticação e gestão completa entram depois da validação comercial inicial.</p>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> O MVP deve ser pequeno: poucos produtos, processo claro e aprendizado rápido.</aside>
+    </section>
+
+    <section class="slide dark" data-title="Riscos">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-branca.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">15 · Riscos</span>
+      </header>
+      <div class="content">
+        <h2>Riscos e como reduzir</h2>
+        <div class="cards">
+          <article class="card"><h3>Estoque</h3><p>Começar com orçamento validado manualmente, não checkout automático.</p></article>
+          <article class="card"><h3>Preço</h3><p>Usar valores reais do parceiro e validade clara de orçamento.</p></article>
+          <article class="card"><h3>Suporte</h3><p>Definir garantia, manutenção e processo de atendimento antes de vender.</p></article>
+          <article class="card"><h3>Compatibilidade</h3><p>Manter regras objetivas e revisão técnica antes da montagem.</p></article>
+          <article class="card"><h3>Entrega</h3><p>Padronizar prazo, teste, checklist e comunicação com cliente.</p></article>
+          <article class="card"><h3>Expectativa</h3><p>Explicar limitações da máquina recomendada com transparência.</p></article>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Risco reconhecido passa confiança. O parceiro precisa ver que a operação foi considerada.</aside>
+    </section>
+
+    <section class="slide" data-title="Proposta">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-azul.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">16 · Proposta</span>
+      </header>
+      <div class="content two">
+        <div>
+          <h2>Proposta para a reunião</h2>
+          <p class="subtitle">Começar pequeno, testar com clientes reais e melhorar juntos.</p>
+        </div>
+        <ul class="clean">
+          <li>Escolher 5 a 10 configurações reais.</li>
+          <li>Trocar placeholders por preços e margens reais.</li>
+          <li>Definir quem responde lead e em qual prazo.</li>
+          <li>Rodar um piloto com orçamento manual.</li>
+          <li>Revisar resultados e decidir próximos investimentos.</li>
+        </ul>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> A pergunta final pode ser: “Qual seria o menor teste viável para sabermos se isso vende?”</aside>
+    </section>
+
+    <section class="slide dark" data-title="Fechamento">
+      <header class="topbar">
+        <img class="logo" src="../../apps/web/public/marca/logo-branca.png" alt="MDA Soluções em Tecnologia">
+        <span class="kicker">17 · Fechamento</span>
+      </header>
+      <div class="content center">
+        <h2>Por que agora e por que juntos</h2>
+        <p class="subtitle">Porque a dor já existe, a primeira versão digital já está construída e a operação física é a peça que transforma recomendação em venda entregue.</p>
+        <div class="pill-row">
+          <span class="pill">Dor real</span>
+          <span class="pill">Produto navegável</span>
+          <span class="pill">Operação complementar</span>
+          <span class="pill">Teste pequeno</span>
+          <span class="pill">Aprendizado rápido</span>
+        </div>
+      </div>
+      <aside class="notes"><strong>Notas:</strong> Termine sem exagero: “não é promessa de escala imediata; é uma forma concreta de começar melhor.”</aside>
+    </section>
+  </main>
+
+  <nav class="controls" aria-label="Controles dos slides">
+    <button type="button" id="prev" aria-label="Slide anterior">Anterior</button>
+    <span class="counter" id="counter">1 / 17</span>
+    <button type="button" id="next" aria-label="Próximo slide">Próximo</button>
+  </nav>
+  <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+  <script>
+    (function () {
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const prev = document.getElementById("prev");
+      const next = document.getElementById("next");
+      const counter = document.getElementById("counter");
+      const progress = document.getElementById("progress");
+      let index = 0;
+
+      function clamp(value) {
+        return Math.max(0, Math.min(slides.length - 1, value));
+      }
+
+      function show(nextIndex, updateHash = true) {
+        index = clamp(nextIndex);
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("active", i === index);
+          slide.setAttribute("aria-hidden", i === index ? "false" : "true");
+        });
+        prev.disabled = index === 0;
+        next.disabled = index === slides.length - 1;
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+        document.title = `${index + 1}. ${slides[index].dataset.title} | Parceria MDA`;
+        if (updateHash) {
+          history.replaceState(null, "", `#${index + 1}`);
+        }
+      }
+
+      prev.addEventListener("click", () => show(index - 1));
+      next.addEventListener("click", () => show(index + 1));
+
+      document.addEventListener("keydown", (event) => {
+        const key = event.key;
+        if (["ArrowRight", "PageDown", " "].includes(key)) {
+          event.preventDefault();
+          show(index + 1);
+        } else if (["ArrowLeft", "PageUp"].includes(key)) {
+          event.preventDefault();
+          show(index - 1);
+        } else if (key === "Home") {
+          event.preventDefault();
+          show(0);
+        } else if (key === "End") {
+          event.preventDefault();
+          show(slides.length - 1);
+        }
+      });
+
+      const initial = Number.parseInt(location.hash.replace("#", ""), 10);
+      show(Number.isFinite(initial) ? initial - 1 : 0, false);
+    })();
+  </script>
+</body>
+</html>

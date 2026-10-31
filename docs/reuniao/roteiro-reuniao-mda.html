@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roteiro de Reunião | Parceria MDA</title>
+  <style>
+    :root {
+      --navy-950: #001528;
+      --navy-900: #001f3d;
+      --navy-850: #002040;
+      --navy-800: #002b52;
+      --navy-700: #0a3a66;
+      --navy-100: #dbe7f3;
+      --navy-50: #eef4fa;
+      --acao: #1d6fd1;
+      --acao-escura: #175cae;
+      --acao-clara: #7ab2f0;
+      --prata: #c8cdd4;
+      --texto: #0c1a29;
+      --muted: #51607a;
+      --borda: #dde4ec;
+      --card: #ffffff;
+      --ok: #137a42;
+      --alerta: #a16207;
+      --risco: #b42318;
+      --shadow: 0 20px 60px rgba(0, 31, 61, 0.12);
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: #f8fafc;
+      color: var(--texto);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: Sora, Inter, ui-sans-serif, system-ui, sans-serif;
+      line-height: 1.15;
+      color: var(--navy-900);
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    a {
+      color: var(--acao);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: white;
+      background:
+        radial-gradient(52rem 26rem at 86% -12%, rgba(29, 111, 209, 0.30), transparent 62%),
+        radial-gradient(38rem 22rem at -8% 110%, rgba(122, 178, 240, 0.16), transparent 62%),
+        linear-gradient(160deg, var(--navy-800) 0%, var(--navy-900) 55%, var(--navy-950) 100%);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(122, 178, 240, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(122, 178, 240, 0.07) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(60rem 30rem at 50% 0%, black 30%, transparent 75%);
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero-inner {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 330px;
+      gap: 48px;
+      align-items: center;
+      padding: 48px 0 56px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .brand img {
+      width: 126px;
+      height: auto;
+      display: block;
+    }
+
+    .brand span {
+      color: var(--navy-100);
+      font-size: 0.9rem;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(122, 178, 240, 0.45);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: var(--acao-clara);
+      background: rgba(0, 31, 61, 0.55);
+      font-weight: 700;
+      font-size: 0.86rem;
+    }
+
+    .hero h1 {
+      max-width: 800px;
+      color: white;
+      font-size: clamp(2.1rem, 5vw, 4.8rem);
+      font-weight: 800;
+    }
+
+    .hero h1 span {
+      color: var(--acao-clara);
+    }
+
+    .hero-copy {
+      max-width: 700px;
+      margin-top: 22px;
+      color: var(--navy-100);
+      font-size: 1.12rem;
+    }
+
+    .hero-card {
+      border: 1px solid rgba(122, 178, 240, 0.28);
+      border-radius: 18px;
+      padding: 22px;
+      background: rgba(0, 31, 61, 0.58);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-card h2 {
+      color: white;
+      font-size: 1.25rem;
+    }
+
+    .hero-card ul {
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      color: var(--navy-100);
+      font-size: 0.95rem;
+    }
+
+    .hero-card li {
+      display: flex;
+      gap: 10px;
+    }
+
+    .hero-card li::before {
+      content: "";
+      flex: 0 0 9px;
+      width: 9px;
+      height: 9px;
+      margin-top: 8px;
+      border-radius: 99px;
+      background: var(--acao-clara);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      align-items: start;
+      padding: 36px 0 72px;
+    }
+
+    .toc {
+      position: sticky;
+      top: 18px;
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      padding: 18px;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0, 31, 61, 0.06);
+    }
+
+    .toc h2 {
+      margin-bottom: 10px;
+      color: var(--navy-900);
+      font-size: 1rem;
+    }
+
+    .toc ol {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .content {
+      display: grid;
+      gap: 24px;
+      min-width: 0;
+    }
+
+    .section {
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      padding: clamp(22px, 4vw, 34px);
+      background: var(--card);
+      box-shadow: 0 14px 36px rgba(0, 31, 61, 0.06);
+    }
+
+    .section h2 {
+      margin-bottom: 12px;
+      font-size: clamp(1.45rem, 3vw, 2.05rem);
+    }
+
+    .section h3 {
+      margin: 24px 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .lead {
+      max-width: 780px;
+      color: var(--muted);
+      font-size: 1.04rem;
+    }
+
+    .callout {
+      margin-top: 18px;
+      border-left: 4px solid var(--acao);
+      border-radius: 12px;
+      padding: 16px 18px;
+      background: var(--navy-50);
+    }
+
+    .callout strong {
+      color: var(--navy-900);
+    }
+
+    .script {
+      margin-top: 16px;
+      border: 1px solid rgba(29, 111, 209, 0.18);
+      border-radius: 14px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    }
+
+    .script-label {
+      display: inline-block;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(29, 111, 209, 0.10);
+      color: var(--acao-escura);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .mini-card {
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .mini-card h3 {
+      margin-top: 0;
+      color: var(--navy-900);
+    }
+
+    .mini-card p,
+    .mini-card li {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    ul,
+    ol {
+      margin: 12px 0 0;
+      padding-left: 22px;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tag {
+      border: 1px solid var(--borda);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #fff;
+      color: var(--navy-800);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .tag.next {
+      border-color: rgba(161, 98, 7, 0.28);
+      background: #fffbeb;
+      color: var(--alerta);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+      counter-reset: step;
+    }
+
+    .step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: start;
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--navy-800);
+      color: white;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin: 0 0 4px;
+    }
+
+    .step p {
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+      font-size: 0.95rem;
+    }
+
+    th,
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--borda);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    th {
+      background: var(--navy-50);
+      color: var(--navy-900);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    td {
+      color: var(--muted);
+    }
+
+    td strong {
+      color: var(--texto);
+    }
+
+    .status-ok {
+      color: var(--ok);
+      font-weight: 800;
+    }
+
+    .status-next {
+      color: var(--alerta);
+      font-weight: 800;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(219, 231, 243, 0.16);
+      background: var(--navy-950);
+      color: var(--navy-100);
+    }
+
+    .footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 28px 0;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 940px) {
+      .hero-inner,
+      .layout,
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wrap {
+        width: min(100% - 24px, 1120px);
+      }
+
+      .hero-inner {
+        padding: 30px 0 42px;
+      }
+
+      .brand {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .section {
+        border-radius: 14px;
+      }
+
+      .footer .wrap {
+        flex-direction: column;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .hero,
+      .footer {
+        background: white !important;
+        color: var(--texto);
+      }
+
+      .hero::before,
+      .toc {
+        display: none;
+      }
+
+      .hero h1,
+      .hero-card h2 {
+        color: var(--navy-900);
+      }
+
+      .hero-copy,
+      .hero-card ul,
+      .brand span {
+        color: var(--muted);
+      }
+
+      .hero-card,
+      .section {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      a {
+        color: inherit;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-inner">
+      <div>
+        <div class="brand">
+          <img src="../../apps/web/public/marca/logo-branca.png" alt="MDA Soluções em Tecnologia">
+          <span>Roteiro de reunião para conversa com potencial parceiro operacional</span>
+        </div>
+        <p class="eyebrow">Parceria MDA · Produto digital + operação física</p>
+        <h1>Apresentar a MDA como uma forma mais simples de vender <span>o computador certo para cada pessoa.</span></h1>
+        <p class="hero-copy">
+          Este roteiro ajuda a conduzir a reunião com clareza: mostrar a dor do cliente,
+          demonstrar o que já foi construído, explicar a oportunidade comercial e propor uma
+          parceria pequena, testável e bem executada.
+        </p>
+      </div>
+      <aside class="hero-card" aria-label="Resumo executivo">
+        <h2>Mensagem central</h2>
+        <ul>
+          <li>O cliente não quer aprender hardware; ele quer comprar sem errar.</li>
+          <li>A plataforma transforma necessidades simples em uma recomendação clara.</li>
+          <li>A venda só fecha bem com revisão técnica, estoque real e atendimento humano.</li>
+          <li>A parceria une produto digital com operação física.</li>
+        </ul>
+      </aside>
+    </div>
+  </header>
+
+  <main class="wrap layout">
+    <nav class="toc" aria-label="Sumário">
+      <h2>Sumário</h2>
+      <ol>
+        <li><a href="#abertura">Abertura</a></li>
+        <li><a href="#dor">Como explicar a dor</a></li>
+        <li><a href="#solucao">Como apresentar a solução</a></li>
+        <li><a href="#demo">Como mostrar o site ao vivo</a></li>
+        <li><a href="#resultado">Página de recomendação</a></li>
+        <li><a href="#oportunidade">Oportunidade de negócio</a></li>
+        <li><a href="#parceria">Lógica da parceria</a></li>
+        <li><a href="#perguntas">Perguntas para o parceiro</a></li>
+        <li><a href="#objecoes">Objeções e respostas</a></li>
+        <li><a href="#proximos-passos">Próximos passos</a></li>
+        <li><a href="#versoes">Versões de 3 e 15 minutos</a></li>
+      </ol>
+    </nav>
+
+    <div class="content">
+      <section id="abertura" class="section">
+        <h2>1. Abertura pitch</h2>
+        <p class="lead">
+          Comece direto, sem tentar vender uma ideia grande demais. O objetivo é mostrar que
+          existe uma dor concreta, uma primeira versão funcional e uma parceria com divisão
+          clara de responsabilidades.
+        </p>
+
+        <div class="script">
+          <span class="script-label">Fala sugerida</span>
+          <p>
+            “Eu montei uma plataforma para resolver um problema comum: muita gente precisa de
+            computador, mas não sabe escolher. A pessoa usa computador para estudar, trabalhar,
+            jogar ou criar, mas trava quando aparece processador, memória, placa de vídeo,
+            fonte, compatibilidade e preço. A proposta da MDA é simples: o cliente conta o que
+            faz no dia a dia, a plataforma recomenda uma configuração em linguagem clara e um
+            especialista revisa antes de vender. Eu entro com produto digital, UX, site,
+            programação e fluxo de recomendação. Você entraria com a parte física: montagem,
+            fornecedores, conhecimento técnico, venda, entrega e manutenção.”
+          </p>
+        </div>
+
+        <div class="callout">
+          <strong>Tom da abertura:</strong> profissional, realista e colaborativo. Evite falar
+          como se o produto estivesse pronto para escalar. Fale como uma base funcional para
+          validar vendas reais.
+        </div>
+      </section>
+
+      <section id="dor" class="section">
+        <h2>2. Como explicar a dor</h2>
+        <p class="lead">
+          A dor principal não é falta de computador no mercado. É excesso de opções, linguagem
+          técnica e medo de comprar errado.
+        </p>
+
+        <div class="grid-2">
+          <div class="mini-card">
+            <h3>O que o cliente sente</h3>
+            <ul>
+              <li>“Não sei se esse PC roda o que eu preciso.”</li>
+              <li>“Não quero pagar caro por algo que não vou usar.”</li>
+              <li>“Tenho medo de comprar peça incompatível.”</li>
+              <li>“Todo vendedor fala difícil ou tenta empurrar algo.”</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h3>O que a venda precisa resolver</h3>
+            <ul>
+              <li>Traduzir necessidade para configuração.</li>
+              <li>Mostrar por que aquela escolha faz sentido.</li>
+              <li>Reduzir insegurança antes do orçamento.</li>
+              <li>Gerar confiança com revisão humana.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="script">
+          <span class="script-label">Fala sugerida</span>
+          <p>
+            “A maioria dos clientes não quer saber se o processador é tier 3 ou 4. Ele quer
+            saber se vai conseguir estudar, trabalhar, jogar, editar vídeo ou usar AutoCAD sem
+            passar raiva. Quando a loja fala só em peça, ela transfere a decisão para uma pessoa
+            que não tem repertório técnico. A MDA inverte isso: começa pela vida real do cliente
+            e só depois chega na configuração.”
+          </p>
+        </div>
+      </section>
+
+      <section id="solucao" class="section">
+        <h2>3. Como apresentar a solução</h2>
+        <p class="lead">
+          A solução é uma recomendação guiada com apoio humano. A plataforma não substitui o
+          especialista; ela organiza a conversa e aumenta a confiança.
+        </p>
+
+        <div class="timeline">
+          <div class="step">
+            <div>
+              <h3>Cliente responde em linguagem simples</h3>
+              <p>Usos, intensidade, orçamento, softwares, periféricos e prioridade.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Motor calcula uma demanda</h3>
+              <p>Regras determinísticas transformam respostas em CPU, GPU, RAM e SSD necessários.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Catálogo é pontuado</h3>
+              <p>As builds prontas são comparadas por adequação, orçamento e prioridade.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Compatibilidade é revisada</h3>
+              <p>Socket, memória, fonte, gabinete, vídeo e consumo são checados por regras.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Resumo fica claro para cliente e vendedor</h3>
+              <p>A IA/mock explica a recomendação; a decisão técnica continua protegida por regra e revisão humana.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Ponto importante:</strong> não diga que a IA decide sozinha. O código atual usa
+          IA/mock para explicar; a escolha e as checagens vêm de regras determinísticas.
+        </div>
+      </section>
+
+      <section id="demo" class="section">
+        <h2>4. Como mostrar o site ao vivo</h2>
+        <p class="lead">
+          A demonstração deve parecer uma venda real. Escolha um perfil simples, por exemplo:
+          “estudante que também joga leve” ou “profissional que usa planilhas e reuniões”.
+        </p>
+
+        <h3>Na home</h3>
+        <div class="script">
+          <span class="script-label">Fala enquanto mostra a home</span>
+          <p>
+            “Aqui a primeira mensagem é proposital: ‘Você não precisa entender de peças. A
+            gente entende por você.’ Isso é o posicionamento. A home não começa falando de
+            hardware; ela começa tirando o peso do cliente. Depois ela mostra o processo:
+            contar o que precisa, receber recomendação, revisar com especialista e receber
+            pronto para usar.”
+          </p>
+        </div>
+        <ul>
+          <li>Mostre os botões “Encontrar meu computador ideal” e “Ver computadores prontos”.</li>
+          <li>Explique os benefícios: compatibilidade, linguagem simples, preço transparente e suporte humano.</li>
+          <li>Mostre os casos de uso: trabalho, estudos, planilhas, jogos, design, vídeo, engenharia e programação.</li>
+          <li>Mostre a vitrine de PCs prontos como alternativa para quem já quer orçamento.</li>
+        </ul>
+
+        <h3>No onboarding</h3>
+        <div class="script">
+          <span class="script-label">Fala enquanto responde às perguntas</span>
+          <p>
+            “Repara que o cliente não escolhe placa-mãe, fonte ou soquete. Ele escolhe o que
+            faz: estudo, trabalho, jogos, design, AutoCAD, edição. Depois diz intensidade,
+            orçamento e prioridade. Isso transforma a conversa comercial em diagnóstico.”
+          </p>
+        </div>
+        <ul>
+          <li>Mostre o progresso por pergunta e a navegação de voltar/continuar.</li>
+          <li>Destaque que softwares conhecidos ajudam a melhorar a recomendação.</li>
+          <li>Mostre o campo “Outro software” se fizer sentido.</li>
+          <li>Explique que periféricos evitam orçamento incompleto ou repetido.</li>
+          <li>Na última pergunta, destaque a revisão por especialista.</li>
+        </ul>
+
+        <h3>Na vitrine de PCs prontos</h3>
+        <p>
+          Mostre que já existe uma estrutura para exibir máquinas prontas, preço estimado,
+          principais componentes, público indicado e pedido de orçamento. Reforce que os preços
+          atuais são placeholders e precisam ser substituídos com dados reais do parceiro.
+        </p>
+      </section>
+
+      <section id="resultado" class="section">
+        <h2>5. O que dizer na página de recomendação</h2>
+        <p class="lead">
+          Esta é a página mais importante da demonstração, porque mostra como a plataforma pode
+          virar conversa comercial e orçamento.
+        </p>
+
+        <div class="script">
+          <span class="script-label">Fala sugerida</span>
+          <p>
+            “Aqui a plataforma fecha o raciocínio. Ela não joga uma lista de peças solta. Ela
+            mostra a máquina recomendada, o investimento estimado, por que essa opção combina
+            com o uso do cliente, o resumo rápido, a configuração e os avisos importantes.
+            Depois oferece três ações: solicitar orçamento, falar com especialista ou salvar a
+            recomendação.”
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="mini-card">
+            <h3>Cliente entende</h3>
+            <p>Resumo amigável, motivos da recomendação e linguagem sem jargão.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Vendedor age</h3>
+            <p>Lead chega com origem, sessão, recomendação e mensagem do cliente.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Técnico revisa</h3>
+            <p>Painel mostra respostas, compatibilidade, riscos, consumo e perguntas ao vendedor.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Demonstre transparência:</strong> se houver orçamento acima da faixa, periféricos
+          faltando ou limitação de notebook, a recomendação deve tratar isso como ponto de
+          conversa, não esconder.
+        </div>
+      </section>
+
+      <section id="oportunidade" class="section">
+        <h2>6. Como explicar a oportunidade de negócio</h2>
+        <p class="lead">
+          A oportunidade está em transformar uma venda técnica e insegura em uma compra guiada,
+          compreensível e acompanhada.
+        </p>
+
+        <div class="grid-2">
+          <div class="mini-card">
+            <h3>Por que pode converter melhor</h3>
+            <ul>
+              <li>O cliente entende o motivo da recomendação.</li>
+              <li>A conversa começa com necessidade, não com peça.</li>
+              <li>O lead chega mais qualificado para orçamento.</li>
+              <li>A revisão humana aumenta confiança.</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h3>Onde pode gerar receita</h3>
+            <ul>
+              <li>PCs sob medida.</li>
+              <li>PCs prontos.</li>
+              <li>Upgrades.</li>
+              <li>Suporte e manutenção.</li>
+              <li>Clientes empresariais pequenos.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="script">
+          <span class="script-label">Fala sugerida</span>
+          <p>
+            “Eu não estou partindo de uma ideia abstrata. Já existe um primeiro produto digital
+            navegável. O que falta para virar negócio é justamente a parte que depende de
+            operação: preço real, fornecedores, disponibilidade, montagem, garantia, entrega,
+            atendimento e manutenção. É por isso que faz sentido conversar com alguém que já
+            entende o lado físico.”
+          </p>
+        </div>
+      </section>
+
+      <section id="parceria" class="section">
+        <h2>7. Como explicar a parceria</h2>
+        <p class="lead">
+          A proposta precisa deixar claro que a parceria não é “alguém ajudar no site”. É uma
+          divisão de competências entre produto digital e operação física.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Frente</th>
+                <th>Minha responsabilidade</th>
+                <th>Responsabilidade do parceiro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Produto</strong></td>
+                <td>Visão, UX, website, programação, fluxo de recomendação e melhorias digitais.</td>
+                <td>Feedback técnico e comercial para deixar a recomendação aderente à realidade.</td>
+              </tr>
+              <tr>
+                <td><strong>Catálogo</strong></td>
+                <td>Estrutura para exibir componentes, builds e recomendações.</td>
+                <td>Componentes reais, fornecedores, preços, margens e disponibilidade.</td>
+              </tr>
+              <tr>
+                <td><strong>Venda</strong></td>
+                <td>Captura e organização dos leads pela plataforma.</td>
+                <td>Atendimento, negociação, orçamento final, fechamento e pós-venda.</td>
+              </tr>
+              <tr>
+                <td><strong>Entrega</strong></td>
+                <td>Apoio digital para padronizar comunicação e dados do pedido.</td>
+                <td>Montagem, testes, garantia, entrega, manutenção e upgrades.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <strong>Como posicionar:</strong> “A plataforma abre a porta e organiza a decisão; a
+          operação entrega a promessa.”
+        </div>
+      </section>
+
+      <section id="existente" class="section">
+        <h2>8. O que já existe e o que é próxima etapa</h2>
+        <p class="lead">
+          Use esta parte para demonstrar maturidade. Não esconda limitações; elas viram o plano
+          de trabalho com o parceiro.
+        </p>
+
+        <div class="tag-row" aria-label="Funcionalidades já existentes">
+          <span class="tag">Home institucional</span>
+          <span class="tag">Vitrine de PCs prontos</span>
+          <span class="tag">Onboarding guiado</span>
+          <span class="tag">Resultado de recomendação</span>
+          <span class="tag">Motor determinístico</span>
+          <span class="tag">Regras de compatibilidade</span>
+          <span class="tag">IA/mock explicativa</span>
+          <span class="tag">Leads reais</span>
+          <span class="tag">Painel admin demonstrativo</span>
+          <span class="tag">Visão técnica interna</span>
+        </div>
+
+        <div class="tag-row" aria-label="Próximas etapas">
+          <span class="tag next">Próxima etapa: preços reais</span>
+          <span class="tag next">Próxima etapa: WhatsApp real</span>
+          <span class="tag next">Próxima etapa: notificações</span>
+          <span class="tag next">Próxima etapa: autenticação</span>
+          <span class="tag next">Próxima etapa: CRUD admin</span>
+          <span class="tag next">Próxima etapa: fornecedores e estoque</span>
+          <span class="tag next">Próxima etapa: checkout</span>
+          <span class="tag next">Próxima etapa: CRM</span>
+        </div>
+      </section>
+
+      <section id="perguntas" class="section">
+        <h2>9. Perguntas para fazer ao potencial parceiro</h2>
+        <p class="lead">
+          A reunião não deve ser só apresentação. Use as respostas dele para validar operação,
+          margem, capacidade e interesse real.
+        </p>
+
+        <div class="grid-2">
+          <div class="mini-card">
+            <h3>Operação e fornecedores</h3>
+            <ul>
+              <li>Quais fornecedores você usa hoje?</li>
+              <li>Como você define preço final e margem?</li>
+              <li>Quais peças têm boa disponibilidade?</li>
+              <li>Você prefere trabalhar com estoque ou sob encomenda?</li>
+              <li>Quanto tempo leva para montar, testar e entregar?</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h3>Venda e suporte</h3>
+            <ul>
+              <li>Quais clientes você mais atende hoje?</li>
+              <li>Quais dúvidas aparecem antes da compra?</li>
+              <li>Quais problemas aparecem no pós-venda?</li>
+              <li>Você vê potencial em PCs prontos, sob medida ou ambos?</li>
+              <li>Que garantia e manutenção faria sentido oferecer?</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="script">
+          <span class="script-label">Pergunta de fechamento da conversa</span>
+          <p>
+            “Olhando para isso como negócio, qual seria a forma mais simples de testarmos com
+            clientes reais sem assumir custo alto logo de início?”
+          </p>
+        </div>
+      </section>
+
+      <section id="objecoes" class="section">
+        <h2>10. Objeções que ele pode levantar e como responder</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Objeção</th>
+                <th>Resposta recomendada</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>“IA pode recomendar errado.”</strong></td>
+                <td>A IA não decide sozinha. O motor atual usa regras determinísticas para demanda, pontuação e compatibilidade. A IA/mock explica em linguagem humana. A revisão técnica antes da venda continua obrigatória.</td>
+              </tr>
+              <tr>
+                <td><strong>“Preço muda muito.”</strong></td>
+                <td>Hoje os preços são placeholders. A próxima etapa é substituir por preço real do parceiro e tratar o valor como orçamento sujeito à disponibilidade.</td>
+              </tr>
+              <tr>
+                <td><strong>“Estoque pode não bater.”</strong></td>
+                <td>Correto. Por isso a plataforma deve começar como geradora de lead e orçamento, não como checkout automático. Estoque real entra em fase posterior.</td>
+              </tr>
+              <tr>
+                <td><strong>“Cliente pode querer algo muito específico.”</strong></td>
+                <td>O fluxo já permite softwares e observações. Casos específicos viram conversa com especialista, e não decisão automática.</td>
+              </tr>
+              <tr>
+                <td><strong>“Ainda não tem login e gestão completa.”</strong></td>
+                <td>Existe painel demonstrativo com catálogo em leitura, builds em leitura e leads reais. Autenticação e CRUD estão no roadmap do MVP comercial/admin.</td>
+              </tr>
+              <tr>
+                <td><strong>“Quem cuida do pós-venda?”</strong></td>
+                <td>Essa é justamente uma responsabilidade da operação física. A parceria precisa definir garantia, manutenção, suporte e processo de retorno.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="proximos-passos" class="section">
+        <h2>11. Próximos passos depois da reunião</h2>
+        <p class="lead">
+          Termine com um teste pequeno. A primeira meta não é montar uma empresa completa; é
+          provar que clientes reais entendem a proposta e pedem orçamento.
+        </p>
+
+        <div class="timeline">
+          <div class="step">
+            <div>
+              <h3>Revisar catálogo inicial</h3>
+              <p>Escolher 5 a 10 configurações reais, com fornecedores, custos, margem e disponibilidade.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Ajustar textos e preços</h3>
+              <p>Trocar placeholders por valores reais e deixar claro o que é orçamento estimado.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Definir processo comercial</h3>
+              <p>Quem responde lead, em quanto tempo, por qual canal e com qual modelo de orçamento.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Testar com clientes reais</h3>
+              <p>Rodar um piloto pequeno com pessoas conhecidas, anúncios locais ou base existente.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Melhorar com feedback</h3>
+              <p>Ajustar perguntas, regras, builds, copy e atendimento a partir das dúvidas reais.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="versoes" class="section">
+        <h2>12. Versão curta de 3 minutos</h2>
+        <div class="script">
+          <span class="script-label">Roteiro rápido</span>
+          <p>
+            “A ideia da MDA é ajudar pessoas que precisam de computador, mas não entendem de
+            hardware. Hoje, para comprar um PC, o cliente precisa comparar processador, memória,
+            placa de vídeo, fonte e compatibilidade. Isso gera insegurança e compra errada. Eu
+            construí uma primeira versão de uma plataforma que resolve isso de forma guiada: o
+            cliente responde perguntas simples sobre uso, orçamento e prioridade; o sistema
+            recomenda uma configuração; e um especialista revisa antes da venda. Já existe home,
+            vitrine de PCs prontos, onboarding, página de recomendação, captura de leads e painel
+            demonstrativo. O que falta para virar negócio é a operação real: fornecedores,
+            preços, montagem, entrega, garantia e manutenção. É aí que vejo a parceria: eu cuido
+            do produto digital e evolução da plataforma; você cuida da operação física e da
+            venda técnica. A proposta é começarmos pequeno, com poucas configurações reais,
+            testar com clientes e melhorar juntos.”
+          </p>
+        </div>
+
+        <h2 style="margin-top: 32px;">13. Versão completa de 15 minutos</h2>
+        <div class="timeline">
+          <div class="step">
+            <div>
+              <h3>Minuto 0-2: contexto</h3>
+              <p>Explique que o cliente não quer aprender hardware; ele quer comprar certo, dentro do orçamento e com confiança.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Minuto 2-4: dor</h3>
+              <p>Mostre medo de errar, excesso de opções, linguagem técnica e risco de gastar mal.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Minuto 4-6: solução</h3>
+              <p>Apresente recomendação guiada, regras de compatibilidade, explicação clara e revisão humana.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Minuto 6-10: demonstração ao vivo</h3>
+              <p>Mostre home, onboarding e resultado. Use um caso simples e conduza como se fosse uma venda real.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Minuto 10-12: negócio</h3>
+              <p>Explique receita por PCs sob medida, PCs prontos, upgrades, suporte, manutenção e pequenos negócios.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Minuto 12-14: parceria</h3>
+              <p>Separe responsabilidades: produto digital de um lado, operação física do outro.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Minuto 14-15: proposta</h3>
+              <p>Convide para um piloto pequeno com catálogo real, processo de atendimento e primeiros clientes.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <p>MDA Soluções em Tecnologia · Roteiro de reunião</p>
+      <p>Documento local: docs/reuniao/roteiro-reuniao-mda.html</p>
+    </div>
+  </footer>
+</body>
+</html>
